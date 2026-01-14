@@ -21,6 +21,17 @@ header{
 header img{height:50px}
 header h1{font-size:24px}
 
+/* LANGUAGE BUTTON */
+.lang-btn{
+  background:#fff;
+  color:#0a3d62;
+  border:none;
+  padding:6px 12px;
+  border-radius:20px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
 /* NAV */
 nav{
   background:#1e3799;
@@ -33,7 +44,6 @@ nav a{
   text-decoration:none;
   font-weight:600;
 }
-nav a:hover{text-decoration:underline}
 
 /* HERO */
 .hero{
@@ -42,8 +52,8 @@ nav a:hover{text-decoration:underline}
   color:white;
   text-align:center;
 }
-.hero h2{font-size:40px;margin-bottom:10px}
-.hero p{font-size:18px}
+.hero h2{font-size:40px}
+.hero p{font-size:18px;margin-top:5px}
 .hero button{
   margin-top:20px;
   padding:12px 30px;
@@ -59,10 +69,7 @@ nav a:hover{text-decoration:underline}
 section{padding:50px 8%}
 section h2{text-align:center;color:#0a3d62;margin-bottom:25px}
 
-/* ABOUT */
-.about{text-align:center;line-height:1.8}
-
-/* SERVICES */
+/* GRID */
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
@@ -89,14 +96,8 @@ section h2{text-align:center;color:#0a3d62;margin-bottom:25px}
 .review{font-style:italic}
 .review span{display:block;margin-top:10px;font-weight:bold;color:#1e3799}
 
-/* WHY US */
-.why{background:#ecf0f1}
-
 /* CONTACT */
 .contact{text-align:center}
-.contact p{margin:6px}
-
-/* MAP */
 iframe{width:100%;height:300px;border-radius:10px}
 
 /* FOOTER */
@@ -118,10 +119,6 @@ footer{
   border-radius:50%;
 }
 .whatsapp img{width:30px}
-
-@media(max-width:600px){
-  .hero h2{font-size:28px}
-}
 </style>
 </head>
 
@@ -130,123 +127,70 @@ footer{
 <header>
   <div style="display:flex;align-items:center;gap:10px">
     <img src="https://cdn-icons-png.flaticon.com/512/1995/1995470.png">
-    <h1>PrasaTek Shop</h1>
+    <h1 id="shopName">PrasaTek Shop</h1>
   </div>
+  <button class="lang-btn" onclick="toggleLang()">සිංහල</button>
 </header>
 
 <nav>
-  <a href="#about">About</a>
-  <a href="#services">Services</a>
-  <a href="#products">Products</a>
-  <a href="#reviews">Reviews</a>
-  <a href="#contact">Contact</a>
+  <a href="#about" id="navAbout">About</a>
+  <a href="#services" id="navServices">Services</a>
+  <a href="#products" id="navProducts">Products</a>
+  <a href="#reviews" id="navReviews">Reviews</a>
+  <a href="#contact" id="navContact">Contact</a>
 </nav>
 
 <div class="hero">
-  <h2>Your Trusted Technology Partner</h2>
-  <p>Sales | Repairs | Custom Builds | Support</p>
-  <button onclick="openWhatsApp()">Chat on WhatsApp</button>
+  <h2 id="heroTitle">Your Trusted Technology Partner</h2>
+  <p id="heroText">Sales | Repairs | Custom Builds | Support</p>
+  <button onclick="openWhatsApp()" id="heroBtn">Chat on WhatsApp</button>
 </div>
 
 <section id="about">
-  <h2>About Our Shop</h2>
-  <div class="about">
-    <p>
-      <b>PrasaTek</b> is a professional computer & electronics service center in Sri Lanka.
-      We specialize in laptop & desktop repairs, custom PC builds, software installations,
-      CCTV systems, and accessories sales.
-    </p>
-  </div>
+  <h2 id="aboutTitle">About Our Shop</h2>
+  <p id="aboutText" style="text-align:center">
+    PrasaTek is a professional computer & electronics service center in Sri Lanka.
+  </p>
 </section>
 
 <section id="services">
-  <h2>Our Services</h2>
+  <h2 id="servicesTitle">Our Services</h2>
   <div class="grid">
-    <div class="card">
-      <img src="https://cdn-icons-png.flaticon.com/512/906/906175.png">
-      <h3>Computer Repair</h3>
-      <p>Hardware & software troubleshooting</p>
-    </div>
-    <div class="card">
-      <img src="https://cdn-icons-png.flaticon.com/512/2920/2920277.png">
-      <h3>Custom PC Build</h3>
-      <p>Gaming & office PC builds</p>
-    </div>
-    <div class="card">
-      <img src="https://cdn-icons-png.flaticon.com/512/1006/1006771.png">
-      <h3>Windows Install</h3>
-      <p>Original Windows & drivers</p>
-    </div>
-    <div class="card">
-      <img src="https://cdn-icons-png.flaticon.com/512/3039/3039436.png">
-      <h3>CCTV Install</h3>
-      <p>Home & business security</p>
-    </div>
+    <div class="card"><h3 id="s1">Computer Repair</h3></div>
+    <div class="card"><h3 id="s2">Custom PC Build</h3></div>
+    <div class="card"><h3 id="s3">Windows Installation</h3></div>
+    <div class="card"><h3 id="s4">CCTV Installation</h3></div>
   </div>
 </section>
 
 <section id="products">
-  <h2>Popular Products</h2>
+  <h2 id="productsTitle">Popular Products</h2>
   <div class="grid">
-    <div class="card product">
-      <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8">
-      <h3>Laptop</h3>
-      <p>Starting from Rs. 95,000</p>
-    </div>
-    <div class="card product">
-      <img src="https://images.unsplash.com/photo-1587202372775-e229f172b9d3">
-      <h3>Gaming PC</h3>
-      <p>Custom build available</p>
-    </div>
-    <div class="card product">
-      <img src="https://images.unsplash.com/photo-1580894908360-7f92c37a6c5a">
-      <h3>Accessories</h3>
-      <p>Keyboard, mouse, SSD, RAM</p>
-    </div>
+    <div class="card product"><h3 id="p1">Laptops</h3></div>
+    <div class="card product"><h3 id="p2">Gaming PCs</h3></div>
+    <div class="card product"><h3 id="p3">Accessories</h3></div>
   </div>
 </section>
 
 <section id="reviews">
-  <h2>Customer Reviews</h2>
+  <h2 id="reviewsTitle">Customer Reviews</h2>
   <div class="grid">
-    <div class="card review">
-      “Very friendly service and affordable prices.”
-      <span>- Kasun P.</span>
-    </div>
-    <div class="card review">
-      “Best place for PC repairs in town.”
-      <span>- Nimal R.</span>
-    </div>
-    <div class="card review">
-      “Highly recommended for gaming builds.”
-      <span>- Sanduni K.</span>
-    </div>
-  </div>
-</section>
-
-<section class="why">
-  <h2>Why Choose Us?</h2>
-  <div class="grid">
-    <div class="card">✔ Experienced Technicians</div>
-    <div class="card">✔ Genuine Parts</div>
-    <div class="card">✔ Affordable Pricing</div>
-    <div class="card">✔ Fast Service</div>
+    <div class="card review" id="r1">Excellent service</div>
+    <div class="card review" id="r2">Affordable prices</div>
+    <div class="card review" id="r3">Highly recommended</div>
   </div>
 </section>
 
 <section id="contact">
-  <h2>Contact Us</h2>
+  <h2 id="contactTitle">Contact Us</h2>
   <div class="contact">
-    <p><b>Address:</b> Main Street, Sri Lanka</p>
-    <p><b>Phone:</b> +94 71 932 3239</p>
-    <p><b>Email:</b> prasatek@gmail.com</p>
+    <p id="addr">Address: Sri Lanka</p>
+    <p id="phone">Phone: +94 77 123 4567</p>
   </div>
-  <br>
-  <iframe src="https://maps.google.com/maps?q=Sri%20Lanka&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe>
 </section>
 
 <footer>
-  © 2026 PrasaTek Shop | All Rights Reserved
+  © 2026 PrasaTek Shop
 </footer>
 
 <a class="whatsapp" onclick="openWhatsApp()">
@@ -254,12 +198,41 @@ footer{
 </a>
 
 <script>
+let lang="en";
+
+function toggleLang(){
+  lang = lang==="en" ? "si":"en";
+  document.querySelector(".lang-btn").innerText = lang==="en"?"සිංහල":"English";
+
+  if(lang==="si"){
+    heroTitle.innerText="ඔබේ විශ්වාසනීය තාක්ෂණික සහකරු";
+    heroText.innerText="විකුණුම් | අලුත්වැඩියා | PC Build | සහාය";
+    heroBtn.innerText="WhatsApp මගින් කතා කරන්න";
+    navAbout.innerText="අප ගැන";
+    navServices.innerText="සේවාවන්";
+    navProducts.innerText="නිෂ්පාදන";
+    navReviews.innerText="අදහස්";
+    navContact.innerText="සම්බන්ධ වන්න";
+    aboutTitle.innerText="අපගේ වෙළඳසැල";
+    aboutText.innerText="PrasaTek ශ්‍රී ලංකාවේ විශ්වාසනීය පරිගණක සේවා මධ්‍යස්ථානයකි.";
+    servicesTitle.innerText="අපගේ සේවාවන්";
+    s1.innerText="පරිගණක අලුත්වැඩියා";
+    s2.innerText="Custom PC සාදන සේවාව";
+    s3.innerText="Windows ස්ථාපනය";
+    s4.innerText="CCTV ස්ථාපනය";
+    productsTitle.innerText="ජනප්‍රිය නිෂ්පාදන";
+    reviewsTitle.innerText="පාරිභෝගික අදහස්";
+    contactTitle.innerText="සම්බන්ධ වන්න";
+    addr.innerText="ලිපිනය: ශ්‍රී ලංකාව";
+  }else{
+    location.reload();
+  }
+}
+
 function openWhatsApp(){
-  window.open("https://wa.me/94719323239","_blank");
+  window.open("https://wa.me/94771234567","_blank");
 }
 </script>
 
 </body>
 </html>
-
-
