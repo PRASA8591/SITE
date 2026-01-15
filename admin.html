@@ -2,284 +2,224 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Admin Panel | PrasaTek</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrasaTek Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" type="image/png" href="favicon.png">
 <style>
-body{
-  margin:0;
-  font-family:Segoe UI,Arial;
-  background:#f4f6f8;
-}
-header{
-  background:#0a3d62;
-  color:#fff;
-  padding:15px 20px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-header h2{margin:0}
-header button{
-  background:#e74c3c;
-  color:white;
-  border:none;
-  padding:8px 14px;
-  border-radius:6px;
-  cursor:pointer;
-}
-
-.container{
-  padding:20px;
-}
-.section{
-  background:white;
-  padding:20px;
-  margin-bottom:25px;
-  border-radius:10px;
-  box-shadow:0 6px 16px rgba(0,0,0,.1);
-}
-.section h3{
-  margin-top:0;
-  color:#0a3d62;
-}
-
-input, textarea{
-  width:100%;
-  padding:10px;
-  margin:6px 0;
-  border-radius:6px;
-  border:1px solid #ccc;
-}
-
-button.primary{
-  background:#1e3799;
-  color:white;
-  border:none;
-  padding:10px 18px;
-  border-radius:6px;
-  cursor:pointer;
-  margin-top:10px;
-}
-
-.list-item{
-  padding:10px;
-  border-bottom:1px solid #eee;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.list-item:last-child{border:none}
-
-.list-item button{
-  background:#e74c3c;
-  color:white;
-  border:none;
-  padding:6px 10px;
-  border-radius:5px;
-  cursor:pointer;
-}
-
-.approve{
-  background:#27ae60 !important;
-}
+body{margin:0;font-family:Segoe UI;background:#f4f6f8}
+header{background:#0a3d62;color:#fff;padding:15px;display:flex;justify-content:space-between}
+section{padding:20px}
+h2{color:#0a3d62;margin-top:0}
+.box{background:#fff;border-radius:10px;padding:15px;margin-bottom:20px}
+input,textarea{width:100%;padding:8px;margin:5px 0;border-radius:6px;border:1px solid #ccc}
+button{border:none;padding:8px 14px;border-radius:6px;cursor:pointer}
+.save{background:#27ae60;color:#fff}
+.add{background:#2980b9;color:#fff}
+.del{background:#c0392b;color:#fff}
+.edit{background:#f39c12;color:#fff}
+.list{max-height:260px;overflow:auto}
+.item{border-bottom:1px solid #ddd;padding:8px}
+.actions button{margin:4px}
+#popup{position:fixed;bottom:20px;right:20px;background:#333;color:#fff;padding:12px 18px;border-radius:8px;display:none}
 </style>
 </head>
 
 <body>
 
 <header>
-  <h2>PrasaTek Admin Panel</h2>
+  <h1>Admin Panel</h1>
   <button onclick="logout()">Logout</button>
 </header>
 
-<div class="container">
+<section>
 
-<!-- WEBSITE DETAILS -->
-<div class="section">
-  <h3>Website Details</h3>
-  <input id="phone" placeholder="Phone number">
-  <input id="email" placeholder="Email">
-  <textarea id="address" placeholder="Address"></textarea>
-  <button class="primary" onclick="saveSettings()">Save Details</button>
+<!-- SETTINGS -->
+<div class="box">
+<h2>⚙️ System Settings</h2>
+<input id="phone" placeholder="Phone">
+<input id="email" placeholder="Email">
+<textarea id="address" placeholder="Address"></textarea>
+<button class="save" onclick="saveSettings()">Save Settings</button>
 </div>
 
 <!-- SERVICES -->
-<div class="section">
-  <h3>Services</h3>
-  <input id="serviceName" placeholder="Service name">
-  <textarea id="serviceDesc" placeholder="Service description"></textarea>
-  <button class="primary" onclick="addService()">Add Service</button>
-  <div id="servicesList"></div>
+<div class="box">
+<h2>🛠 Services</h2>
+<input id="sName" placeholder="Service name">
+<textarea id="sDesc" placeholder="Service description"></textarea>
+<button class="add" onclick="addService()">Add Service</button>
+<div id="servicesList" class="list"></div>
 </div>
 
 <!-- PRODUCTS -->
-<div class="section">
-  <h3>Products</h3>
-  <input id="productName" placeholder="Product name">
-  <textarea id="productDesc" placeholder="Product description"></textarea>
-  <button class="primary" onclick="addProduct()">Add Product</button>
-  <div id="productsList"></div>
+<div class="box">
+<h2>📦 Products</h2>
+<input id="pName" placeholder="Product name">
+<textarea id="pDesc" placeholder="Product description"></textarea>
+<button class="add" onclick="addProduct()">Add Product</button>
+<div id="productsList" class="list"></div>
 </div>
 
 <!-- REVIEWS -->
-<div class="section">
-  <h3>Customer Reviews (Pending)</h3>
-  <div id="reviewsList"></div>
+<div class="box">
+<h2>⏳ Pending Reviews</h2>
+<div id="pendingReviews" class="list"></div>
 </div>
 
+<div class="box">
+<h2>✅ Approved Reviews</h2>
+<div id="approvedReviews" class="list"></div>
 </div>
 
-<!-- FIREBASE LOGIC -->
+</section>
+
+<div id="popup"></div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, addDoc, getDocs, updateDoc, deleteDoc, collection } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDijkYp6_KD3B3UXfNs59LgTUeaKOFDZ7s",
-  authDomain: "prasatek-8a823.firebaseapp.com",
-  projectId: "prasatek-8a823",
-  storageBucket: "prasatek-8a823.firebasestorage.app",
-  messagingSenderId: "1057332753842",
-  appId: "1:1057332753842:web:ecb1ec9728e6dc9c59e0ab",
-  measurementId: "G-TBCKRQ1M08"
+const firebaseConfig={
+  apiKey:"AIzaSyDijkYp6_KD3B3UXfNs59LgTUeaKOFDZ7s",
+  authDomain:"prasatek-8a823.firebaseapp.com",
+  projectId:"prasatek-8a823"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
 
-/* AUTH GUARD */
-onAuthStateChanged(auth, async user => {
-  if(!user){
-    location.href = "adminlog.html";
-    return;
-  }
-  const adminSnap = await getDoc(doc(db,"admins",user.uid));
-  if(!adminSnap.exists()){
-    await signOut(auth);
-    location.href = "adminlog.html";
-  }
+/* AUTH */
+onAuthStateChanged(auth, async user=>{
+  if(!user){location.href="adminlog.html";return;}
+  const adminSnap=await getDoc(doc(db,"admins",user.uid));
+  if(!adminSnap.exists()){logout();return;}
   loadAll();
 });
 
-window.logout = async () => {
-  await signOut(auth);
-  location.href = "adminlog.html";
-};
+/* POPUP */
+function popup(msg){
+  popupBox.innerText=msg;
+  popupBox.style.display="block";
+  setTimeout(()=>popupBox.style.display="none",2500);
+}
+const popupBox=document.getElementById("popup");
 
 /* SETTINGS */
-window.saveSettings = async () => {
-  await setDoc(doc(db,"settings","main"),{
-    phone:phone.value,
-    email:email.value,
-    address:address.value
-  });
-  alert("Website details updated");
-};
-
 async function loadSettings(){
-  const snap = await getDoc(doc(db,"settings","main"));
+  const snap=await getDoc(doc(db,"settings","main"));
   if(snap.exists()){
-    phone.value = snap.data().phone || "";
-    email.value = snap.data().email || "";
-    address.value = snap.data().address || "";
+    phone.value=snap.data().phone||"";
+    email.value=snap.data().email||"";
+    address.value=snap.data().address||"";
   }
 }
-
-/* SERVICES */
-window.addService = async () => {
-  await addDoc(collection(db,"services"),{
-    name:serviceName.value,
-    desc:serviceDesc.value
+window.saveSettings=async()=>{
+  await setDoc(doc(db,"settings","main"),{
+    phone:phone.value,email:email.value,address:address.value
   });
-  serviceName.value="";
-  serviceDesc.value="";
-  loadServices();
+  popup("Settings saved");
 };
 
+/* SERVICES */
 async function loadServices(){
   servicesList.innerHTML="";
-  const snap = await getDocs(collection(db,"services"));
+  const snap=await getDocs(collection(db,"services"));
   snap.forEach(d=>{
-    const div=document.createElement("div");
-    div.className="list-item";
-    div.innerHTML=`${d.data().name}
-      <button onclick="deleteService('${d.id}')">Delete</button>`;
-    servicesList.appendChild(div);
+    servicesList.innerHTML+=`
+    <div class="item">
+      <b>${d.data().name}</b>
+      <p>${d.data().desc}</p>
+      <div class="actions">
+        <button class="edit" onclick="editService('${d.id}','${d.data().name}','${d.data().desc}')">Edit</button>
+        <button class="del" onclick="del('services','${d.id}')">Delete</button>
+      </div>
+    </div>`;
   });
 }
-
-window.deleteService = async id => {
-  await deleteDoc(doc(db,"services",id));
+window.addService=async()=>{
+  if(!sName.value)return;
+  await addDoc(collection(db,"services"),{name:sName.value,desc:sDesc.value});
+  sName.value=sDesc.value="";
+  popup("Service added");
   loadServices();
+};
+window.editService=async(id,n,d)=>{
+  sName.value=n;sDesc.value=d;
+  await del("services",id);
 };
 
 /* PRODUCTS */
-window.addProduct = async () => {
-  await addDoc(collection(db,"products"),{
-    name:productName.value,
-    desc:productDesc.value
-  });
-  productName.value="";
-  productDesc.value="";
-  loadProducts();
-};
-
 async function loadProducts(){
   productsList.innerHTML="";
-  const snap = await getDocs(collection(db,"products"));
+  const snap=await getDocs(collection(db,"products"));
   snap.forEach(d=>{
-    const div=document.createElement("div");
-    div.className="list-item";
-    div.innerHTML=`${d.data().name}
-      <button onclick="deleteProduct('${d.id}')">Delete</button>`;
-    productsList.appendChild(div);
+    productsList.innerHTML+=`
+    <div class="item">
+      <b>${d.data().name}</b>
+      <p>${d.data().desc}</p>
+      <div class="actions">
+        <button class="edit" onclick="editProduct('${d.id}','${d.data().name}','${d.data().desc}')">Edit</button>
+        <button class="del" onclick="del('products','${d.id}')">Delete</button>
+      </div>
+    </div>`;
   });
 }
-
-window.deleteProduct = async id => {
-  await deleteDoc(doc(db,"products",id));
+window.addProduct=async()=>{
+  if(!pName.value)return;
+  await addDoc(collection(db,"products"),{name:pName.value,desc:pDesc.value});
+  pName.value=pDesc.value="";
+  popup("Product added");
   loadProducts();
+};
+window.editProduct=async(id,n,d)=>{
+  pName.value=n;pDesc.value=d;
+  await del("products",id);
 };
 
 /* REVIEWS */
 async function loadReviews(){
-  reviewsList.innerHTML="";
-  const snap = await getDocs(collection(db,"reviews"));
+  pendingReviews.innerHTML="";
+  approvedReviews.innerHTML="";
+  const snap=await getDocs(collection(db,"reviews"));
   snap.forEach(d=>{
-    if(!d.data().approved){
-      const div=document.createElement("div");
-      div.className="list-item";
-      div.innerHTML=`
-        ${d.data().name}: ${d.data().message}
-        <div>
-          <button class="approve" onclick="approveReview('${d.id}')">Approve</button>
-          <button onclick="deleteReview('${d.id}')">Delete</button>
-        </div>`;
-      reviewsList.appendChild(div);
-    }
+    const r=d.data();
+    const html=`
+    <div class="item">
+      <b>${r.name}</b>
+      <small>${r.email}</small>
+      <p>${r.message}</p>
+      <div class="actions">
+        ${!r.approved?`<button class="save" onclick="approve('${d.id}')">Approve</button>`:""}
+        <button class="del" onclick="del('reviews','${d.id}')">Delete</button>
+      </div>
+    </div>`;
+    r.approved?approvedReviews.innerHTML+=html:pendingReviews.innerHTML+=html;
   });
 }
-
-window.approveReview = async id => {
+window.approve=async id=>{
   await updateDoc(doc(db,"reviews",id),{approved:true});
+  popup("Review approved");
   loadReviews();
 };
 
-window.deleteReview = async id => {
-  await deleteDoc(doc(db,"reviews",id));
-  loadReviews();
+/* COMMON */
+window.del=async(col,id)=>{
+  await deleteDoc(doc(db,col,id));
+  popup("Deleted");
+  loadAll();
 };
-
-function loadAll(){
-  loadSettings();
-  loadServices();
-  loadProducts();
-  loadReviews();
+async function loadAll(){
+  await loadSettings();
+  await loadServices();
+  await loadProducts();
+  await loadReviews();
 }
+window.logout=async()=>{
+  await signOut(auth);
+  location.href="adminlog.html";
+};
 </script>
 
 </body>
