@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<title>PrasaTek | Technology Solutions</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PrasaTek Shop | Trusted Service</title>
-
+<link rel="icon" type="image/png" href="favicon.png">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,Arial}
 body{background:#f4f6f8;color:#333}
@@ -12,24 +12,20 @@ body{background:#f4f6f8;color:#333}
 /* HEADER */
 header{
   background:#0a3d62;
+  color:#fff;
   padding:15px 8%;
   display:flex;
-  align-items:center;
   justify-content:space-between;
-  color:#fff;
+  align-items:center;
 }
-header img{height:50px}
-header h1{font-size:24px}
-
-/* LANGUAGE BUTTON */
-.lang-btn{
-  background:#fff;
-  color:#0a3d62;
+header img{height:45px}
+header button{
+  background:#1e3799;
+  color:white;
   border:none;
   padding:6px 12px;
-  border-radius:20px;
+  border-radius:6px;
   cursor:pointer;
-  font-weight:bold;
 }
 
 /* NAV */
@@ -40,7 +36,7 @@ nav{
 }
 nav a{
   color:#fff;
-  margin:0 15px;
+  margin:0 12px;
   text-decoration:none;
   font-weight:600;
 }
@@ -49,76 +45,68 @@ nav a{
 .hero{
   background:url("https://images.unsplash.com/photo-1581090700227-1e37b190418e") center/cover;
   padding:80px 10%;
-  color:white;
   text-align:center;
-}
-.hero h2{font-size:40px}
-.hero p{font-size:18px;margin-top:5px}
-.hero button{
-  margin-top:20px;
-  padding:12px 30px;
-  border:none;
-  background:#25D366;
   color:white;
-  font-size:16px;
-  border-radius:30px;
-  cursor:pointer;
 }
+.hero h1{font-size:40px}
+.hero p{font-size:18px}
 
-/* SECTION */
+/* SECTIONS */
 section{padding:50px 8%}
-section h2{text-align:center;color:#0a3d62;margin-bottom:25px}
+section h2{text-align:center;color:#0a3d62;margin-bottom:30px}
 
-/* GRID */
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
   gap:20px;
 }
+
 .card{
   background:white;
   padding:20px;
   border-radius:12px;
   box-shadow:0 10px 20px rgba(0,0,0,.1);
-  text-align:center;
 }
-.card img{width:60px;margin-bottom:10px}
 
-/* PRODUCTS */
-.product img{
+.review-card{
+  font-style:italic;
+}
+.review-card span{
+  display:block;
+  margin-top:8px;
+  font-weight:bold;
+}
+
+/* REVIEW FORM */
+.review-form input,
+.review-form textarea{
   width:100%;
-  height:150px;
-  object-fit:cover;
-  border-radius:8px;
+  padding:10px;
+  margin:8px 0;
+  border-radius:6px;
+  border:1px solid #ccc;
 }
-
-/* REVIEWS */
-.review{font-style:italic}
-.review span{display:block;margin-top:10px;font-weight:bold;color:#1e3799}
-
-/* CONTACT */
-.contact{text-align:center}
-iframe{width:100%;height:300px;border-radius:10px}
+.review-form button{
+  background:#27ae60;
+  color:white;
+  border:none;
+  padding:10px;
+  border-radius:6px;
+  cursor:pointer;
+}
 
 /* FOOTER */
 footer{
   background:#0a3d62;
   color:white;
-  padding:20px;
   text-align:center;
+  padding:20px;
   margin-top:40px;
 }
 
-/* WHATSAPP */
-.whatsapp{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  background:#25D366;
-  padding:15px;
-  border-radius:50%;
+@media(max-width:600px){
+  .hero h1{font-size:28px}
 }
-.whatsapp img{width:30px}
 </style>
 </head>
 
@@ -126,112 +114,140 @@ footer{
 
 <header>
   <div style="display:flex;align-items:center;gap:10px">
-    <img src="https://cdn-icons-png.flaticon.com/512/1995/1995470.png">
-    <h1 id="shopName">PrasaTek Shop</h1>
+    <img src="logo.png">
+    <b>PrasaTek</b>
   </div>
-  <button class="lang-btn" onclick="toggleLang()">සිංහල</button>
+  <button onclick="toggleLang()">EN / සිං</button>
 </header>
 
 <nav>
-  <a href="#about" id="navAbout">About</a>
-  <a href="#services" id="navServices">Services</a>
-  <a href="#products" id="navProducts">Products</a>
-  <a href="#reviews" id="navReviews">Reviews</a>
-  <a href="#contact" id="navContact">Contact</a>
+  <a href="#services" data-en="Services" data-si="සේවා">Services</a>
+  <a href="#products" data-en="Products" data-si="නිෂ්පාදන">Products</a>
+  <a href="#reviews" data-en="Reviews" data-si="සමාලෝචන">Reviews</a>
+  <a href="#contact" data-en="Contact" data-si="සම්බන්ධ වන්න">Contact</a>
 </nav>
 
 <div class="hero">
-  <h2 id="heroTitle">Your Trusted Technology Partner</h2>
-  <p id="heroText">Sales | Repairs | Custom Builds | Support</p>
-  <button onclick="openWhatsApp()" id="heroBtn">Chat on WhatsApp</button>
+  <h1 data-en="Your Trusted Technology Partner"
+      data-si="ඔබගේ විශ්වාසනීය තාක්ෂණික හවුල්කරු">
+    Your Trusted Technology Partner
+  </h1>
+  <p data-en="Sales | Repairs | Custom Builds | Support"
+     data-si="විකුණුම් | අලුත්වැඩියා | Custom PC | සහාය">
+    Sales | Repairs | Custom Builds | Support
+  </p>
 </div>
 
-<section id="about">
-  <h2 id="aboutTitle">About Our Shop</h2>
-  <p id="aboutText" style="text-align:center">
-    PrasaTek is a professional computer & electronics service center in Sri Lanka.
-  </p>
-</section>
-
 <section id="services">
-  <h2 id="servicesTitle">Our Services</h2>
-  <div class="grid">
-    <div class="card"><h3 id="s1">Computer Repair</h3></div>
-    <div class="card"><h3 id="s2">Custom PC Build</h3></div>
-    <div class="card"><h3 id="s3">Windows Installation</h3></div>
-    <div class="card"><h3 id="s4">CCTV Installation</h3></div>
-  </div>
+  <h2 data-en="Our Services" data-si="අපගේ සේවාවන්">Our Services</h2>
+  <div class="grid" id="servicesList"></div>
 </section>
 
 <section id="products">
-  <h2 id="productsTitle">Popular Products</h2>
-  <div class="grid">
-    <div class="card product"><h3 id="p1">Laptops</h3></div>
-    <div class="card product"><h3 id="p2">Gaming PCs</h3></div>
-    <div class="card product"><h3 id="p3">Accessories</h3></div>
-  </div>
+  <h2 data-en="Our Products" data-si="අපගේ නිෂ්පාදන">Our Products</h2>
+  <div class="grid" id="productsList"></div>
 </section>
 
 <section id="reviews">
-  <h2 id="reviewsTitle">Customer Reviews</h2>
-  <div class="grid">
-    <div class="card review" id="r1">Excellent service</div>
-    <div class="card review" id="r2">Affordable prices</div>
-    <div class="card review" id="r3">Highly recommended</div>
+  <h2 data-en="Customer Reviews" data-si="පාරිභෝගික සමාලෝචන">Customer Reviews</h2>
+  <div class="grid" id="reviewsList"></div>
+
+  <br><br>
+  <h3 data-en="Add Your Review" data-si="ඔබගේ සමාලෝචනය එක් කරන්න">
+    Add Your Review
+  </h3>
+
+  <div class="review-form">
+    <input id="rName" placeholder="Name">
+    <input id="rEmail" placeholder="Email">
+    <textarea id="rMsg" placeholder="Your review"></textarea>
+    <button onclick="submitReview()">Submit Review</button>
   </div>
 </section>
 
 <section id="contact">
-  <h2 id="contactTitle">Contact Us</h2>
-  <div class="contact">
-    <p id="addr">Address: Sri Lanka</p>
-    <p id="phone">Phone: +94 77 123 4567</p>
-  </div>
+  <h2 data-en="Contact Us" data-si="අප අමතන්න">Contact Us</h2>
+  <p><b>📞</b> <span id="phone"></span></p>
+  <p><b>📧</b> <span id="email"></span></p>
+  <p><b>📍</b> <span id="address"></span></p>
 </section>
 
 <footer>
-  © 2026 PrasaTek Shop
+  © 2026 PrasaTek
 </footer>
 
-<a class="whatsapp" onclick="openWhatsApp()">
-  <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png">
-</a>
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+import { getFirestore, collection, getDocs, addDoc, query, where, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
-<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDijkYp6_KD3B3UXfNs59LgTUeaKOFDZ7s",
+  authDomain: "prasatek-8a823.firebaseapp.com",
+  projectId: "prasatek-8a823",
+  storageBucket: "prasatek-8a823.firebasestorage.app",
+  messagingSenderId: "1057332753842",
+  appId: "1:1057332753842:web:ecb1ec9728e6dc9c59e0ab"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+/* LOAD SERVICES */
+const sSnap = await getDocs(collection(db,"services"));
+sSnap.forEach(d=>{
+  servicesList.innerHTML+=`<div class="card">
+    <h3>${d.data().name}</h3>
+    <p>${d.data().desc}</p>
+  </div>`;
+});
+
+/* LOAD PRODUCTS */
+const pSnap = await getDocs(collection(db,"products"));
+pSnap.forEach(d=>{
+  productsList.innerHTML+=`<div class="card">
+    <h3>${d.data().name}</h3>
+    <p>${d.data().desc}</p>
+  </div>`;
+});
+
+/* LOAD REVIEWS */
+const rSnap = await getDocs(query(collection(db,"reviews"),where("approved","==",true)));
+rSnap.forEach(d=>{
+  reviewsList.innerHTML+=`<div class="card review-card">
+    “${d.data().message}”
+    <span>- ${d.data().name}</span>
+  </div>`;
+});
+
+/* SETTINGS */
+const setSnap = await getDoc(doc(db,"settings","main"));
+if(setSnap.exists()){
+  phone.textContent=setSnap.data().phone;
+  email.textContent=setSnap.data().email;
+  address.textContent=setSnap.data().address;
+}
+
+/* SUBMIT REVIEW */
+window.submitReview = async () => {
+  await addDoc(collection(db,"reviews"),{
+    name:rName.value,
+    email:rEmail.value,
+    message:rMsg.value,
+    approved:false
+  });
+  alert("Review submitted for approval");
+  rName.value=rEmail.value=rMsg.value="";
+};
+
+/* LANGUAGE SWITCH */
 let lang="en";
-
-function toggleLang(){
-  lang = lang==="en" ? "si":"en";
-  document.querySelector(".lang-btn").innerText = lang==="en"?"සිංහල":"English";
-
-  if(lang==="si"){
-    heroTitle.innerText="ඔබේ විශ්වාසනීය තාක්ෂණික සහකරු";
-    heroText.innerText="විකුණුම් | අලුත්වැඩියා | PC Build | සහාය";
-    heroBtn.innerText="WhatsApp මගින් කතා කරන්න";
-    navAbout.innerText="අප ගැන";
-    navServices.innerText="සේවාවන්";
-    navProducts.innerText="නිෂ්පාදන";
-    navReviews.innerText="අදහස්";
-    navContact.innerText="සම්බන්ධ වන්න";
-    aboutTitle.innerText="අපගේ වෙළඳසැල";
-    aboutText.innerText="PrasaTek ශ්‍රී ලංකාවේ විශ්වාසනීය පරිගණක සේවා මධ්‍යස්ථානයකි.";
-    servicesTitle.innerText="අපගේ සේවාවන්";
-    s1.innerText="පරිගණක අලුත්වැඩියා";
-    s2.innerText="Custom PC සාදන සේවාව";
-    s3.innerText="Windows ස්ථාපනය";
-    s4.innerText="CCTV ස්ථාපනය";
-    productsTitle.innerText="ජනප්‍රිය නිෂ්පාදන";
-    reviewsTitle.innerText="පාරිභෝගික අදහස්";
-    contactTitle.innerText="සම්බන්ධ වන්න";
-    addr.innerText="ලිපිනය: ශ්‍රී ලංකාව";
-  }else{
-    location.reload();
-  }
-}
-
-function openWhatsApp(){
-  window.open("https://wa.me/94771234567","_blank");
-}
+window.toggleLang=()=>{
+  lang=lang==="en"?"si":"en";
+  document.querySelectorAll("[data-en]").forEach(el=>{
+    el.textContent=el.dataset[lang];
+  });
+};
 </script>
 
 </body>
