@@ -2,110 +2,173 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>PrasaTek | Technology Solutions</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrasaTek | System Solutions</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" type="image/png" href="favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,Arial}
-body{background:#f4f6f8;color:#333}
+:root{
+  --main:#0a3d62;
+  --accent:#25D366;
+  --light:#f5f7fa;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins}
+html{scroll-behavior:smooth}
+body{background:var(--light);color:#333}
 
 /* HEADER */
 header{
-  background:#0a3d62;
+  background:var(--main);
   color:#fff;
-  padding:15px 8%;
+  padding:12px 8%;
   display:flex;
-  justify-content:space-between;
   align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  z-index:10;
 }
-header img{height:45px}
-header button{
-  background:#1e3799;
-  color:white;
-  border:none;
-  padding:6px 12px;
-  border-radius:6px;
-  cursor:pointer;
-}
-
-/* NAV */
-nav{
-  background:#1e3799;
-  padding:10px;
-  text-align:center;
-}
+.logo{display:flex;align-items:center;gap:10px}
+.logo img{height:40px}
 nav a{
-  color:#fff;
-  margin:0 12px;
-  text-decoration:none;
-  font-weight:600;
+  color:#fff;margin:0 12px;
+  text-decoration:none;font-weight:500;
+}
+nav a:hover{opacity:.85}
+
+/* LANG */
+.langBtn{
+  background:#fff;color:#333;
+  border:none;padding:6px 14px;
+  border-radius:20px;
+  cursor:pointer;font-weight:600;
 }
 
 /* HERO */
 .hero{
-  background:url("https://images.unsplash.com/photo-1581090700227-1e37b190418e") center/cover;
-  padding:80px 10%;
-  text-align:center;
-  color:white;
+  background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
+  url("https://images.unsplash.com/photo-1581090700227-1e37b190418e") center/cover;
+  color:#fff;text-align:center;
+  padding:90px 10%;
 }
-.hero h1{font-size:40px}
-.hero p{font-size:18px}
+.hero h2{font-size:42px}
+.hero p{margin-top:10px;font-size:18px}
 
-/* SECTIONS */
-section{padding:50px 8%}
-section h2{text-align:center;color:#0a3d62;margin-bottom:30px}
+/* SECTION */
+section{padding:70px 8%}
+section h2{text-align:center;color:var(--main);margin-bottom:40px}
 
+/* GRID */
 .grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:20px;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:25px;
 }
-
 .card{
-  background:white;
-  padding:20px;
-  border-radius:12px;
-  box-shadow:0 10px 20px rgba(0,0,0,.1);
+  background:#fff;padding:25px;
+  border-radius:16px;
+  box-shadow:0 12px 30px rgba(0,0,0,.08);
+  transition:.35s;
+}
+.card:hover{
+  transform:translateY(-8px);
+  box-shadow:0 22px 45px rgba(0,0,0,.15);
 }
 
-.review-card{
-  font-style:italic;
+/* CONTACT */
+.contactWrap{
+  background:linear-gradient(135deg,#0a3d62,#1e6fa6);
+  border-radius:22px;
+  padding:50px;
+  color:#fff;
+  box-shadow:0 25px 50px rgba(0,0,0,.25);
 }
-.review-card span{
-  display:block;
-  margin-top:8px;
-  font-weight:bold;
+.contactGrid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:25px;
+}
+.contactCard{
+  background:rgba(255,255,255,.12);
+  padding:30px;
+  border-radius:18px;
+  text-align:center;
+  backdrop-filter:blur(6px);
+  animation:pulse 2.5s infinite;
+  transition:.4s;
+}
+.contactCard:hover{
+  transform:translateY(-10px) scale(1.03);
+  background:rgba(255,255,255,.2);
 }
 
-/* REVIEW FORM */
-.review-form input,
-.review-form textarea{
+/* MAP */
+.mapBox{
+  margin-top:40px;
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 25px 50px rgba(0,0,0,.25);
+  transform:scale(.95);
+  opacity:0;
+  animation:mapIn 1.2s ease forwards;
+}
+.mapBox iframe{
+  width:100%;
+  height:380px;
+  border:0;
+}
+
+/* FORM */
+input,textarea{
   width:100%;
   padding:10px;
-  margin:8px 0;
-  border-radius:6px;
+  margin:6px 0;
+  border-radius:8px;
   border:1px solid #ccc;
 }
-.review-form button{
-  background:#27ae60;
-  color:white;
+button.main{
+  background:var(--accent);
   border:none;
-  padding:10px;
-  border-radius:6px;
+  padding:12px 30px;
+  color:#fff;
+  border-radius:30px;
   cursor:pointer;
 }
 
 /* FOOTER */
 footer{
-  background:#0a3d62;
-  color:white;
+  background:var(--main);
+  color:#fff;
   text-align:center;
-  padding:20px;
-  margin-top:40px;
+  padding:22px;
+  font-size:14px;
 }
 
-@media(max-width:600px){
-  .hero h1{font-size:28px}
+/* POPUP */
+#popup{
+  position:fixed;
+  bottom:20px;right:20px;
+  background:#333;color:#fff;
+  padding:14px 20px;
+  border-radius:12px;
+  display:none;
+}
+
+/* ANIMATIONS */
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,255,255,.4)}
+  70%{box-shadow:0 0 0 18px rgba(255,255,255,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}
+}
+@keyframes mapIn{
+  to{opacity:1;transform:scale(1)}
+}
+
+/* MOBILE */
+@media(max-width:768px){
+  nav{display:none}
+  .hero h2{font-size:32px}
 }
 </style>
 </head>
@@ -113,140 +176,145 @@ footer{
 <body>
 
 <header>
-  <div style="display:flex;align-items:center;gap:10px">
+  <div class="logo">
     <img src="logo.png">
-    <b>PrasaTek</b>
+    <strong>PrasaTek</strong>
   </div>
-  <button onclick="toggleLang()">EN / සිං</button>
+
+  <nav>
+    <a href="#services">Services</a>
+    <a href="#products">Products</a>
+    <a href="#reviews">Reviews</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <button class="langBtn" onclick="toggleLang()" id="langBtn">සිං</button>
 </header>
 
-<nav>
-  <a href="#services" data-en="Services" data-si="සේවා">Services</a>
-  <a href="#products" data-en="Products" data-si="නිෂ්පාදන">Products</a>
-  <a href="#reviews" data-en="Reviews" data-si="සමාලෝචන">Reviews</a>
-  <a href="#contact" data-en="Contact" data-si="සම්බන්ධ වන්න">Contact</a>
-</nav>
-
 <div class="hero">
-  <h1 data-en="Your Trusted Technology Partner"
-      data-si="ඔබගේ විශ්වාසනීය තාක්ෂණික හවුල්කරු">
-    Your Trusted Technology Partner
-  </h1>
-  <p data-en="Sales | Repairs | Custom Builds | Support"
-     data-si="විකුණුම් | අලුත්වැඩියා | Custom PC | සහාය">
-    Sales | Repairs | Custom Builds | Support
-  </p>
+  <h2 id="heroTitle">Your Trusted Technology Partner</h2>
+  <p id="heroDesc">Sales • Repairs • Custom Builds</p>
 </div>
 
 <section id="services">
-  <h2 data-en="Our Services" data-si="අපගේ සේවාවන්">Our Services</h2>
-  <div class="grid" id="servicesList"></div>
+<h2 id="srvTitle">Our Services</h2>
+<div id="servicesList" class="grid"></div>
 </section>
 
 <section id="products">
-  <h2 data-en="Our Products" data-si="අපගේ නිෂ්පාදන">Our Products</h2>
-  <div class="grid" id="productsList"></div>
+<h2 id="prdTitle">Products</h2>
+<div id="productsList" class="grid"></div>
 </section>
 
 <section id="reviews">
-  <h2 data-en="Customer Reviews" data-si="පාරිභෝගික සමාලෝචන">Customer Reviews</h2>
-  <div class="grid" id="reviewsList"></div>
-
-  <br><br>
-  <h3 data-en="Add Your Review" data-si="ඔබගේ සමාලෝචනය එක් කරන්න">
-    Add Your Review
-  </h3>
-
-  <div class="review-form">
-    <input id="rName" placeholder="Name">
-    <input id="rEmail" placeholder="Email">
-    <textarea id="rMsg" placeholder="Your review"></textarea>
-    <button onclick="submitReview()">Submit Review</button>
-  </div>
+<h2 id="revTitle">Customer Reviews</h2>
+<div id="reviewsList" class="grid"></div>
 </section>
 
 <section id="contact">
-  <h2 data-en="Contact Us" data-si="අප අමතන්න">Contact Us</h2>
-  <p><b>📞</b> <span id="phone"></span></p>
-  <p><b>📧</b> <span id="email"></span></p>
-  <p><b>📍</b> <span id="address"></span></p>
+<h2>Contact Us</h2>
+
+<div class="contactWrap">
+  <div class="contactGrid">
+    <div class="contactCard"><h3>📞 Phone</h3><p id="cPhone">Loading...</p></div>
+    <div class="contactCard"><h3>📧 Email</h3><p id="cEmail">Loading...</p></div>
+    <div class="contactCard"><h3>📍 Address</h3><p id="cAddress">Loading...</p></div>
+  </div>
+
+  <!-- GOOGLE MAP -->
+  <div class="mapBox">
+    <iframe 
+      src="https://www.google.com/maps?q=Sri%20Lanka&output=embed"
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </div>
+</div>
+
+<br><br>
+
+<h2 id="addRev">Add Your Review</h2>
+<input id="rName" placeholder="Name">
+<input id="rEmail" placeholder="Email">
+<textarea id="rMsg" placeholder="Your review"></textarea>
+<button class="main" onclick="submitReview()">Submit</button>
+
 </section>
 
 <footer>
-  © 2026 PrasaTek
+  © 2026 <strong>PrasaTek System Solutions</strong>. All Rights Reserved.
 </footer>
 
-<!-- FIREBASE -->
+<div id="popup"></div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc, query, where, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, query, where } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDijkYp6_KD3B3UXfNs59LgTUeaKOFDZ7s",
-  authDomain: "prasatek-8a823.firebaseapp.com",
-  projectId: "prasatek-8a823",
-  storageBucket: "prasatek-8a823.firebasestorage.app",
-  messagingSenderId: "1057332753842",
-  appId: "1:1057332753842:web:ecb1ec9728e6dc9c59e0ab"
+const firebaseConfig={
+  apiKey:"AIzaSyDijkYp6_KD3B3UXfNs59LgTUeaKOFDZ7s",
+  authDomain:"prasatek-8a823.firebaseapp.com",
+  projectId:"prasatek-8a823"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
 
-/* LOAD SERVICES */
-const sSnap = await getDocs(collection(db,"services"));
-sSnap.forEach(d=>{
-  servicesList.innerHTML+=`<div class="card">
-    <h3>${d.data().name}</h3>
-    <p>${d.data().desc}</p>
-  </div>`;
-});
-
-/* LOAD PRODUCTS */
-const pSnap = await getDocs(collection(db,"products"));
-pSnap.forEach(d=>{
-  productsList.innerHTML+=`<div class="card">
-    <h3>${d.data().name}</h3>
-    <p>${d.data().desc}</p>
-  </div>`;
-});
-
-/* LOAD REVIEWS */
-const rSnap = await getDocs(query(collection(db,"reviews"),where("approved","==",true)));
-rSnap.forEach(d=>{
-  reviewsList.innerHTML+=`<div class="card review-card">
-    “${d.data().message}”
-    <span>- ${d.data().name}</span>
-  </div>`;
-});
-
-/* SETTINGS */
-const setSnap = await getDoc(doc(db,"settings","main"));
-if(setSnap.exists()){
-  phone.textContent=setSnap.data().phone;
-  email.textContent=setSnap.data().email;
-  address.textContent=setSnap.data().address;
+const popupBox=document.getElementById("popup");
+function popup(msg){
+  popupBox.innerText=msg;
+  popupBox.style.display="block";
+  setTimeout(()=>popupBox.style.display="none",2500);
 }
 
-/* SUBMIT REVIEW */
-window.submitReview = async () => {
-  await addDoc(collection(db,"reviews"),{
-    name:rName.value,
-    email:rEmail.value,
-    message:rMsg.value,
-    approved:false
+loadServices();loadProducts();loadReviews();loadSettings();
+
+async function loadServices(){
+  const s=await getDocs(collection(db,"services"));
+  servicesList.innerHTML="";
+  s.forEach(d=>servicesList.innerHTML+=`<div class="card"><h3>${d.data().name}</h3><p>${d.data().desc}</p></div>`);
+}
+async function loadProducts(){
+  const s=await getDocs(collection(db,"products"));
+  productsList.innerHTML="";
+  s.forEach(d=>productsList.innerHTML+=`<div class="card"><h3>${d.data().name}</h3><p>${d.data().desc}</p></div>`);
+}
+async function loadReviews(){
+  const q=query(collection(db,"reviews"),where("approved","==",true));
+  const s=await getDocs(q);
+  reviewsList.innerHTML="";
+  s.forEach(d=>reviewsList.innerHTML+=`<div class="card"><p>${d.data().message}</p><small>— ${d.data().name}</small></div>`);
+}
+async function loadSettings(){
+  const s=await getDocs(collection(db,"settings"));
+  s.forEach(d=>{
+    cPhone.innerText=d.data().phone;
+    cEmail.innerText=d.data().email;
+    cAddress.innerText=d.data().address;
   });
-  alert("Review submitted for approval");
+}
+
+window.submitReview=async()=>{
+  if(!rName.value||!rEmail.value||!rMsg.value) return popup("Fill all fields");
+  await addDoc(collection(db,"reviews"),{name:rName.value,email:rEmail.value,message:rMsg.value,approved:false});
   rName.value=rEmail.value=rMsg.value="";
+  popup("Review submitted for approval");
 };
 
-/* LANGUAGE SWITCH */
 let lang="en";
+const si={
+  heroTitle:"ඔබගේ විශ්වාසදායක තාක්ෂණික හවුල්කරු",
+  heroDesc:"විකුණුම් • අලුත්වැඩියා • Custom PC",
+  srvTitle:"අපගේ සේවාවන්",
+  prdTitle:"නිෂ්පාදන",
+  revTitle:"පාරිභෝගික අදහස්",
+  addRev:"ඔබගේ අදහස එක් කරන්න"
+};
 window.toggleLang=()=>{
   lang=lang==="en"?"si":"en";
-  document.querySelectorAll("[data-en]").forEach(el=>{
-    el.textContent=el.dataset[lang];
-  });
+  langBtn.innerText=lang==="en"?"සිං":"EN";
+  if(lang==="si"){Object.keys(si).forEach(id=>document.getElementById(id).innerText=si[id]);}
+  else location.reload();
 };
 </script>
 
