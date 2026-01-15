@@ -1,0 +1,92 @@
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,Arial}
+body{background:#f4f6f8;color:#333}
+
+header{
+  background:#0a3d62;
+  padding:15px 8%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  color:#fff;
+}
+header img{height:50px}
+
+.lang-btn{
+  background:#fff;
+  color:#0a3d62;
+  border:none;
+  padding:6px 14px;
+  border-radius:20px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+nav{
+  background:#1e3799;
+  padding:10px;
+  text-align:center;
+}
+nav a{
+  color:#fff;
+  margin:0 15px;
+  text-decoration:none;
+  font-weight:600;
+}
+
+.hero{
+  background:url("https://images.unsplash.com/photo-1581090700227-1e37b190418e") center/cover;
+  padding:80px 10%;
+  text-align:center;
+  color:#fff;
+}
+.hero h2{font-size:40px}
+.hero p{margin-top:8px;font-size:18px}
+.hero button{
+  margin-top:20px;
+  padding:12px 30px;
+  background:#25D366;
+  border:none;
+  border-radius:30px;
+  color:#fff;
+  font-size:16px;
+  cursor:pointer;
+}
+
+section{padding:50px 8%}
+section h2{text-align:center;color:#0a3d62;margin-bottom:25px}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+}
+.card{
+  background:#fff;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 10px 20px rgba(0,0,0,.1);
+  text-align:center;
+}
+
+.review{font-style:italic}
+.review span{display:block;margin-top:10px;font-weight:bold}
+
+.contact{text-align:center}
+
+footer{
+  background:#0a3d62;
+  color:#fff;
+  padding:20px;
+  text-align:center;
+  margin-top:40px;
+}
+
+.whatsapp{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#25D366;
+  padding:15px;
+  border-radius:50%;
+}
+.whatsapp img{width:30px}

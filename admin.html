@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Panel | PrasaTek</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="favicon.png">
+<style>
+body{
+  margin:0;
+  font-family:Segoe UI,Arial;
+  background:#f4f6f8;
+}
+header{
+  background:#0a3d62;
+  color:#fff;
+  padding:15px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+header h2{margin:0}
+header button{
+  background:#e74c3c;
+  color:white;
+  border:none;
+  padding:8px 14px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.container{
+  padding:20px;
+}
+.section{
+  background:white;
+  padding:20px;
+  margin-bottom:25px;
+  border-radius:10px;
+  box-shadow:0 6px 16px rgba(0,0,0,.1);
+}
+.section h3{
+  margin-top:0;
+  color:#0a3d62;
+}
+
+input, textarea{
+  width:100%;
+  padding:10px;
+  margin:6px 0;
+  border-radius:6px;
+  border:1px solid #ccc;
+}
+
+button.primary{
+  background:#1e3799;
+  color:white;
+  border:none;
+  padding:10px 18px;
+  border-radius:6px;
+  cursor:pointer;
+  margin-top:10px;
+}
+
+.list-item{
+  padding:10px;
+  border-bottom:1px solid #eee;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.list-item:last-child{border:none}
+
+.list-item button{
+  background:#e74c3c;
+  color:white;
+  border:none;
+  padding:6px 10px;
+  border-radius:5px;
+  cursor:pointer;
+}
+
+.approve{
+  background:#27ae60 !important;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>PrasaTek Admin Panel</h2>
+  <button onclick="logout()">Logout</button>
+</header>
+
+<div class="container">
+
+<!-- WEBSITE DETAILS -->
+<div class="section">
+  <h3>Website Details</h3>
+  <input id="phone" placeholder="Phone number">
+  <input id="email" placeholder="Email">
+  <textarea id="address" placeholder="Address"></textarea>
+  <button class="primary" onclick="saveSettings()">Save Details</button>
+</div>
+
+<!-- SERVICES -->
+<div class="section">
+  <h3>Services</h3>
+  <input id="serviceName" placeholder="Service name">
+  <textarea id="serviceDesc" placeholder="Service description"></textarea>
+  <button class="primary" onclick="addService()">Add Service</button>
+  <div id="servicesList"></div>
+</div>
+
+<!-- PRODUCTS -->
+<div class="section">
+  <h3>Products</h3>
+  <input id="productName" placeholder="Product name">
+  <textarea id="productDesc" placeholder="Product description"></textarea>
+  <button class="primary" onclick="addProduct()">Add Product</button>
+  <div id="productsList"></div>
+</div>
+
+<!-- REVIEWS -->
+<div class="section">
+  <h3>Customer Reviews (Pending)</h3>
+  <div id="reviewsList"></div>
+</div>
+
+</div>
+
+<!-- FIREBASE LOGIC -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDijkYp6_KD3B3UXfNs59LgTUeaKOFDZ7s",
+  authDomain: "prasatek-8a823.firebaseapp.com",
+  projectId: "prasatek-8a823",
+  storageBucket: "prasatek-8a823.firebasestorage.app",
+  messagingSenderId: "1057332753842",
+  appId: "1:1057332753842:web:ecb1ec9728e6dc9c59e0ab",
+  measurementId: "G-TBCKRQ1M08"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+/* AUTH GUARD */
+onAuthStateChanged(auth, async user => {
+  if(!user){
+    location.href = "adminlog.html";
+    return;
+  }
+  const adminSnap = await getDoc(doc(db,"admins",user.uid));
+  if(!adminSnap.exists()){
+    await signOut(auth);
+    location.href = "adminlog.html";
+  }
+  loadAll();
+});
+
+window.logout = async () => {
+  await signOut(auth);
+  location.href = "adminlog.html";
+};
+
+/* SETTINGS */
+window.saveSettings = async () => {
+  await setDoc(doc(db,"settings","main"),{
+    phone:phone.value,
+    email:email.value,
+    address:address.value
+  });
+  alert("Website details updated");
+};
+
+async function loadSettings(){
+  const snap = await getDoc(doc(db,"settings","main"));
+  if(snap.exists()){
+    phone.value = snap.data().phone || "";
+    email.value = snap.data().email || "";
+    address.value = snap.data().address || "";
+  }
+}
+
+/* SERVICES */
+window.addService = async () => {
+  await addDoc(collection(db,"services"),{
+    name:serviceName.value,
+    desc:serviceDesc.value
+  });
+  serviceName.value="";
+  serviceDesc.value="";
+  loadServices();
+};
+
+async function loadServices(){
+  servicesList.innerHTML="";
+  const snap = await getDocs(collection(db,"services"));
+  snap.forEach(d=>{
+    const div=document.createElement("div");
+    div.className="list-item";
+    div.innerHTML=`${d.data().name}
+      <button onclick="deleteService('${d.id}')">Delete</button>`;
+    servicesList.appendChild(div);
+  });
+}
+
+window.deleteService = async id => {
+  await deleteDoc(doc(db,"services",id));
+  loadServices();
+};
+
+/* PRODUCTS */
+window.addProduct = async () => {
+  await addDoc(collection(db,"products"),{
+    name:productName.value,
+    desc:productDesc.value
+  });
+  productName.value="";
+  productDesc.value="";
+  loadProducts();
+};
+
+async function loadProducts(){
+  productsList.innerHTML="";
+  const snap = await getDocs(collection(db,"products"));
+  snap.forEach(d=>{
+    const div=document.createElement("div");
+    div.className="list-item";
+    div.innerHTML=`${d.data().name}
+      <button onclick="deleteProduct('${d.id}')">Delete</button>`;
+    productsList.appendChild(div);
+  });
+}
+
+window.deleteProduct = async id => {
+  await deleteDoc(doc(db,"products",id));
+  loadProducts();
+};
+
+/* REVIEWS */
+async function loadReviews(){
+  reviewsList.innerHTML="";
+  const snap = await getDocs(collection(db,"reviews"));
+  snap.forEach(d=>{
+    if(!d.data().approved){
+      const div=document.createElement("div");
+      div.className="list-item";
+      div.innerHTML=`
+        ${d.data().name}: ${d.data().message}
+        <div>
+          <button class="approve" onclick="approveReview('${d.id}')">Approve</button>
+          <button onclick="deleteReview('${d.id}')">Delete</button>
+        </div>`;
+      reviewsList.appendChild(div);
+    }
+  });
+}
+
+window.approveReview = async id => {
+  await updateDoc(doc(db,"reviews",id),{approved:true});
+  loadReviews();
+};
+
+window.deleteReview = async id => {
+  await deleteDoc(doc(db,"reviews",id));
+  loadReviews();
+};
+
+function loadAll(){
+  loadSettings();
+  loadServices();
+  loadProducts();
+  loadReviews();
+}
+</script>
+
+</body>
+</html>

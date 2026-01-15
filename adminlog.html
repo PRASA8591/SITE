@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Login | PrasaTek</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="favicon.png">
+<style>
+body{
+  margin:0;
+  font-family:Segoe UI,Arial;
+  background:linear-gradient(135deg,#0a3d62,#1e3799);
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.login-box{
+  background:white;
+  padding:35px;
+  width:100%;
+  max-width:380px;
+  border-radius:14px;
+  box-shadow:0 20px 40px rgba(0,0,0,.25);
+  text-align:center;
+}
+
+.login-box img{
+  width:80px;
+  margin-bottom:10px;
+}
+
+.login-box h2{
+  margin-bottom:20px;
+  color:#0a3d62;
+}
+
+input{
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border-radius:8px;
+  border:1px solid #ccc;
+  font-size:15px;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  margin-top:15px;
+  border:none;
+  background:#1e3799;
+  color:white;
+  font-size:16px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#0a3d62;
+}
+
+.error{
+  color:red;
+  margin-top:10px;
+  font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="login-box">
+  <img src="logo.png" alt="PrasaTek Logo">
+  <h2>Admin Login</h2>
+
+  <input type="email" id="email" placeholder="Admin Email">
+  <input type="password" id="password" placeholder="Password">
+
+  <button onclick="login()">Login</button>
+
+  <div class="error" id="error"></div>
+</div>
+
+<!-- FIREBASE + LOGIN LOGIC -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDijkYp6_KD3B3UXfNs59LgTUeaKOFDZ7s",
+  authDomain: "prasatek-8a823.firebaseapp.com",
+  projectId: "prasatek-8a823",
+  storageBucket: "prasatek-8a823.firebasestorage.app",
+  messagingSenderId: "1057332753842",
+  appId: "1:1057332753842:web:ecb1ec9728e6dc9c59e0ab",
+  measurementId: "G-TBCKRQ1M08"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+window.login = async function () {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const errorDiv = document.getElementById("error");
+
+  errorDiv.textContent = "";
+
+  if (!email || !password) {
+    errorDiv.textContent = "Please enter email and password";
+    return;
+  }
+
+  try {
+    const userCred = await signInWithEmailAndPassword(auth, email, password);
+    const uid = userCred.user.uid;
+
+    // CHECK ADMIN ROLE
+    const adminRef = doc(db, "admins", uid);
+    const adminSnap = await getDoc(adminRef);
+
+    if (!adminSnap.exists()) {
+      errorDiv.textContent = "Access denied: Not an admin";
+      await auth.signOut();
+      return;
+    }
+
+    // SUCCESS → REDIRECT
+    window.location.href = "admin.html";
+
+  } catch (err) {
+    errorDiv.textContent = err.message.replace("Firebase:", "");
+  }
+};
+</script>
+
+</body>
+</html>
