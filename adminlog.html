@@ -2,139 +2,150 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Admin Login | PrasaTek</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/png" href="favicon.png">
+<title>Admin Login | PrasaTek System Solutions</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
 <style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins}
 body{
-  margin:0;
-  font-family:Segoe UI,Arial;
-  background:linear-gradient(135deg,#0a3d62,#1e3799);
-  height:100vh;
+  min-height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
+  background:linear-gradient(135deg,#0a3d62,#1e90ff);
 }
-
-.login-box{
-  background:white;
-  padding:35px;
+.loginBox{
+  background:#fff;
+  padding:40px 35px;
   width:100%;
-  max-width:380px;
-  border-radius:14px;
-  box-shadow:0 20px 40px rgba(0,0,0,.25);
+  max-width:400px;
+  border-radius:20px;
+  box-shadow:0 25px 50px rgba(0,0,0,.3);
   text-align:center;
+  animation:fadeIn .6s ease;
 }
-
-.login-box img{
-  width:80px;
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:none}
+}
+.loginBox img{
+  height:70px;
   margin-bottom:10px;
 }
-
-.login-box h2{
-  margin-bottom:20px;
+.loginBox h2{
   color:#0a3d62;
+  margin-bottom:25px;
+  font-weight:600;
 }
-
 input{
   width:100%;
-  padding:12px;
+  padding:12px 14px;
   margin:10px 0;
-  border-radius:8px;
+  border-radius:12px;
   border:1px solid #ccc;
-  font-size:15px;
+  font-size:14px;
 }
-
+input:focus{
+  outline:none;
+  border-color:#1e90ff;
+}
 button{
   width:100%;
   padding:12px;
-  margin-top:15px;
   border:none;
-  background:#1e3799;
-  color:white;
+  border-radius:30px;
+  background:#25D366;
+  color:#fff;
   font-size:16px;
-  border-radius:8px;
   cursor:pointer;
+  margin-top:15px;
+  transition:.3s;
 }
+button:hover{opacity:.9}
 
-button:hover{
-  background:#0a3d62;
-}
-
-.error{
-  color:red;
-  margin-top:10px;
-  font-size:14px;
+/* POPUP */
+#popup{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#333;
+  color:#fff;
+  padding:14px 22px;
+  border-radius:12px;
+  display:none;
 }
 </style>
 </head>
 
 <body>
 
-<div class="login-box">
+<div class="loginBox">
   <img src="logo.png" alt="PrasaTek Logo">
-  <h2>Admin Login</h2>
+  <h2>PrasaTek System Solutions</h2>
 
   <input type="email" id="email" placeholder="Admin Email">
   <input type="password" id="password" placeholder="Password">
 
   <button onclick="login()">Login</button>
-
-  <div class="error" id="error"></div>
 </div>
 
-<!-- FIREBASE + LOGIN LOGIC -->
+<div id="popup"></div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged }
+from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDijkYp6_KD3B3UXfNs59LgTUeaKOFDZ7s",
-  authDomain: "prasatek-8a823.firebaseapp.com",
-  projectId: "prasatek-8a823",
-  storageBucket: "prasatek-8a823.firebasestorage.app",
-  messagingSenderId: "1057332753842",
-  appId: "1:1057332753842:web:ecb1ec9728e6dc9c59e0ab",
-  measurementId: "G-TBCKRQ1M08"
+/* FIREBASE CONFIG */
+const firebaseConfig={
+  apiKey:"AIzaSyDijkYp6_KD3B3UXfNs59LgTUeaKOFDZ7s",
+  authDomain:"prasatek-8a823.firebaseapp.com",
+  projectId:"prasatek-8a823"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
 
-window.login = async function () {
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value.trim();
-  const errorDiv = document.getElementById("error");
+/* POPUP */
+const pop=document.getElementById("popup");
+const popup=msg=>{
+  pop.innerText=msg;
+  pop.style.display="block";
+  setTimeout(()=>pop.style.display="none",2500);
+};
 
-  errorDiv.textContent = "";
-
-  if (!email || !password) {
-    errorDiv.textContent = "Please enter email and password";
-    return;
+/* AUTO REDIRECT IF LOGGED */
+onAuthStateChanged(auth,user=>{
+  if(user && sessionStorage.getItem("adminLogged")==="true"){
+    location.replace("admin.html");
   }
+});
 
-  try {
-    const userCred = await signInWithEmailAndPassword(auth, email, password);
-    const uid = userCred.user.uid;
+/* ENTER KEY HANDLING */
+email.addEventListener("keydown",e=>{
+  if(e.key==="Enter") password.focus();
+});
+password.addEventListener("keydown",e=>{
+  if(e.key==="Enter") login();
+});
 
-    // CHECK ADMIN ROLE
-    const adminRef = doc(db, "admins", uid);
-    const adminSnap = await getDoc(adminRef);
+/* LOGIN */
+window.login=()=>{
+  const e=email.value.trim();
+  const p=password.value.trim();
+  if(!e||!p){ popup("Enter email & password"); return; }
 
-    if (!adminSnap.exists()) {
-      errorDiv.textContent = "Access denied: Not an admin";
-      await auth.signOut();
-      return;
-    }
-
-    // SUCCESS → REDIRECT
-    window.location.href = "admin.html";
-
-  } catch (err) {
-    errorDiv.textContent = err.message.replace("Firebase:", "");
-  }
+  signInWithEmailAndPassword(auth,e,p)
+  .then(()=>{
+    sessionStorage.setItem("adminLogged","true");
+    popup("Login successful");
+    setTimeout(()=>location.replace("admin.html"),700);
+  })
+  .catch(()=>{
+    popup("Invalid login details");
+  });
 };
 </script>
 
