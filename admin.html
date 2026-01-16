@@ -2,75 +2,93 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>PrasaTek Admin</title>
+<title>Admin Panel | PrasaTek</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" type="image/png" href="favicon.png">
+
+<script>
+/* 🚨 HARD BLOCK BEFORE PAGE LOAD */
+if(sessionStorage.getItem("adminLogged")!=="true"){
+  location.replace("adminlog.html");
+}
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
 <style>
-body{margin:0;font-family:Segoe UI;background:#f4f6f8}
-header{background:#0a3d62;color:#fff;padding:15px;display:flex;justify-content:space-between}
-section{padding:20px}
-h2{color:#0a3d62;margin-top:0}
-.box{background:#fff;border-radius:10px;padding:15px;margin-bottom:20px}
-input,textarea{width:100%;padding:8px;margin:5px 0;border-radius:6px;border:1px solid #ccc}
-button{border:none;padding:8px 14px;border-radius:6px;cursor:pointer}
-.save{background:#27ae60;color:#fff}
-.add{background:#2980b9;color:#fff}
-.del{background:#c0392b;color:#fff}
-.edit{background:#f39c12;color:#fff}
-.list{max-height:260px;overflow:auto}
-.item{border-bottom:1px solid #ddd;padding:8px}
-.actions button{margin:4px}
-#popup{position:fixed;bottom:20px;right:20px;background:#333;color:#fff;padding:12px 18px;border-radius:8px;display:none}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins}
+body{background:#f4f6f8}
+header{
+  background:#0a3d62;color:#fff;
+  padding:15px 8%;
+  display:flex;justify-content:space-between
+}
+section{padding:30px 8%}
+h2{color:#0a3d62;margin-bottom:10px}
+input,textarea{
+  width:100%;padding:10px;margin:6px 0;
+  border-radius:8px;border:1px solid #ccc
+}
+button{
+  padding:6px 14px;border:none;border-radius:20px;
+  background:#25D366;color:#fff;cursor:pointer;margin:4px
+}
+.danger{background:#e74c3c}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:15px}
+.card{
+  background:#fff;padding:18px;border-radius:14px;
+  box-shadow:0 10px 25px rgba(0,0,0,.1)
+}
+.scroll{max-height:300px;overflow:auto}
+
+/* POPUP */
+#popup{
+  position:fixed;bottom:20px;right:20px;
+  background:#333;color:#fff;
+  padding:14px 22px;border-radius:12px;
+  display:none
+}
 </style>
 </head>
 
 <body>
 
 <header>
-  <h1>Admin Panel</h1>
+  <strong>PrasaTek Admin</strong>
   <button onclick="logout()">Logout</button>
 </header>
 
 <section>
-
-<!-- SETTINGS -->
-<div class="box">
-<h2>⚙️ System Settings</h2>
+<h2>Contact Settings</h2>
 <input id="phone" placeholder="Phone">
 <input id="email" placeholder="Email">
-<textarea id="address" placeholder="Address"></textarea>
-<button class="save" onclick="saveSettings()">Save Settings</button>
-</div>
+<input id="address" placeholder="Address">
+<button onclick="saveSettings()">Update</button>
+</section>
 
-<!-- SERVICES -->
-<div class="box">
-<h2>🛠 Services</h2>
-<input id="sName" placeholder="Service name">
-<textarea id="sDesc" placeholder="Service description"></textarea>
-<button class="add" onclick="addService()">Add Service</button>
-<div id="servicesList" class="list"></div>
-</div>
+<section>
+<h2>Services</h2>
+<input id="srvName" placeholder="Service name">
+<textarea id="srvDesc" placeholder="Description"></textarea>
+<button onclick="addService()">Add</button>
+<div id="services" class="grid"></div>
+</section>
 
-<!-- PRODUCTS -->
-<div class="box">
-<h2>📦 Products</h2>
-<input id="pName" placeholder="Product name">
-<textarea id="pDesc" placeholder="Product description"></textarea>
-<button class="add" onclick="addProduct()">Add Product</button>
-<div id="productsList" class="list"></div>
-</div>
+<section>
+<h2>Products</h2>
+<input id="prdName" placeholder="Product name">
+<textarea id="prdDesc" placeholder="Description"></textarea>
+<button onclick="addProduct()">Add</button>
+<div id="products" class="grid"></div>
+</section>
 
-<!-- REVIEWS -->
-<div class="box">
-<h2>⏳ Pending Reviews</h2>
-<div id="pendingReviews" class="list"></div>
-</div>
+<section>
+<h2>Pending Reviews</h2>
+<div id="pending" class="grid scroll"></div>
+</section>
 
-<div class="box">
-<h2>✅ Approved Reviews</h2>
-<div id="approvedReviews" class="list"></div>
-</div>
-
+<section>
+<h2>Approved Reviews</h2>
+<div id="approved" class="grid scroll"></div>
 </section>
 
 <div id="popup"></div>
@@ -78,8 +96,12 @@ button{border:none;padding:8px 14px;border-radius:6px;cursor:pointer}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, addDoc, getDocs, updateDoc, deleteDoc, collection } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+import {
+  getFirestore, collection, getDocs, addDoc,
+  deleteDoc, doc, updateDoc
+} from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
+/* FIREBASE */
 const firebaseConfig={
   apiKey:"AIzaSyDijkYp6_KD3B3UXfNs59LgTUeaKOFDZ7s",
   authDomain:"prasatek-8a823.firebaseapp.com",
@@ -90,136 +112,131 @@ const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 const db=getFirestore(app);
 
-/* AUTH */
-onAuthStateChanged(auth, async user=>{
-  if(!user){location.href="adminlog.html";return;}
-  const adminSnap=await getDoc(doc(db,"admins",user.uid));
-  if(!adminSnap.exists()){logout();return;}
-  loadAll();
+/* DOUBLE AUTH CHECK */
+onAuthStateChanged(auth,user=>{
+  if(!user){
+    sessionStorage.clear();
+    location.replace("adminlog.html");
+  }
 });
 
 /* POPUP */
-function popup(msg){
-  popupBox.innerText=msg;
-  popupBox.style.display="block";
-  setTimeout(()=>popupBox.style.display="none",2500);
-}
-const popupBox=document.getElementById("popup");
+const pop=document.getElementById("popup");
+const popup=msg=>{
+  pop.innerText=msg;
+  pop.style.display="block";
+  setTimeout(()=>pop.style.display="none",2500);
+};
+
+/* LOGOUT */
+window.logout=()=>{
+  signOut(auth);
+  sessionStorage.clear();
+  location.replace("adminlog.html");
+};
 
 /* SETTINGS */
 async function loadSettings(){
-  const snap=await getDoc(doc(db,"settings","main"));
-  if(snap.exists()){
-    phone.value=snap.data().phone||"";
-    email.value=snap.data().email||"";
-    address.value=snap.data().address||"";
-  }
+  const s=await getDocs(collection(db,"settings"));
+  s.forEach(d=>{
+    phone.value=d.data().phone||"";
+    email.value=d.data().email||"";
+    address.value=d.data().address||"";
+  });
 }
 window.saveSettings=async()=>{
-  await setDoc(doc(db,"settings","main"),{
+  await addDoc(collection(db,"settings"),{
     phone:phone.value,email:email.value,address:address.value
   });
-  popup("Settings saved");
+  popup("Updated");
 };
 
 /* SERVICES */
 async function loadServices(){
-  servicesList.innerHTML="";
-  const snap=await getDocs(collection(db,"services"));
-  snap.forEach(d=>{
-    servicesList.innerHTML+=`
-    <div class="item">
+  services.innerHTML="";
+  const s=await getDocs(collection(db,"services"));
+  s.forEach(d=>{
+    services.innerHTML+=`
+    <div class="card">
       <b>${d.data().name}</b>
       <p>${d.data().desc}</p>
-      <div class="actions">
-        <button class="edit" onclick="editService('${d.id}','${d.data().name}','${d.data().desc}')">Edit</button>
-        <button class="del" onclick="del('services','${d.id}')">Delete</button>
-      </div>
+      <button onclick="edit('services','${d.id}','${d.data().name}','${d.data().desc}')">Edit</button>
+      <button class="danger" onclick="del('services','${d.id}')">Delete</button>
     </div>`;
   });
 }
 window.addService=async()=>{
-  if(!sName.value)return;
-  await addDoc(collection(db,"services"),{name:sName.value,desc:sDesc.value});
-  sName.value=sDesc.value="";
-  popup("Service added");
-  loadServices();
-};
-window.editService=async(id,n,d)=>{
-  sName.value=n;sDesc.value=d;
-  await del("services",id);
+  await addDoc(collection(db,"services"),{
+    name:srvName.value,desc:srvDesc.value
+  });
+  srvName.value=srvDesc.value="";
+  loadServices(); popup("Service added");
 };
 
 /* PRODUCTS */
 async function loadProducts(){
-  productsList.innerHTML="";
-  const snap=await getDocs(collection(db,"products"));
-  snap.forEach(d=>{
-    productsList.innerHTML+=`
-    <div class="item">
+  products.innerHTML="";
+  const s=await getDocs(collection(db,"products"));
+  s.forEach(d=>{
+    products.innerHTML+=`
+    <div class="card">
       <b>${d.data().name}</b>
       <p>${d.data().desc}</p>
-      <div class="actions">
-        <button class="edit" onclick="editProduct('${d.id}','${d.data().name}','${d.data().desc}')">Edit</button>
-        <button class="del" onclick="del('products','${d.id}')">Delete</button>
-      </div>
+      <button onclick="edit('products','${d.id}','${d.data().name}','${d.data().desc}')">Edit</button>
+      <button class="danger" onclick="del('products','${d.id}')">Delete</button>
     </div>`;
   });
 }
 window.addProduct=async()=>{
-  if(!pName.value)return;
-  await addDoc(collection(db,"products"),{name:pName.value,desc:pDesc.value});
-  pName.value=pDesc.value="";
-  popup("Product added");
-  loadProducts();
-};
-window.editProduct=async(id,n,d)=>{
-  pName.value=n;pDesc.value=d;
-  await del("products",id);
+  await addDoc(collection(db,"products"),{
+    name:prdName.value,desc:prdDesc.value
+  });
+  prdName.value=prdDesc.value="";
+  loadProducts(); popup("Product added");
 };
 
 /* REVIEWS */
 async function loadReviews(){
-  pendingReviews.innerHTML="";
-  approvedReviews.innerHTML="";
-  const snap=await getDocs(collection(db,"reviews"));
-  snap.forEach(d=>{
+  pending.innerHTML=""; approved.innerHTML="";
+  const s=await getDocs(collection(db,"reviews"));
+  s.forEach(d=>{
     const r=d.data();
-    const html=`
-    <div class="item">
-      <b>${r.name}</b>
-      <small>${r.email}</small>
+    const box=`
+    <div class="card">
+      <b>${r.name}</b> (${r.email})
       <p>${r.message}</p>
-      <div class="actions">
-        ${!r.approved?`<button class="save" onclick="approve('${d.id}')">Approve</button>`:""}
-        <button class="del" onclick="del('reviews','${d.id}')">Delete</button>
-      </div>
+      ${r.approved
+      ?`<button class="danger" onclick="del('reviews','${d.id}')">Delete</button>`
+      :`<button onclick="approve('${d.id}')">Approve</button>
+        <button class="danger" onclick="del('reviews','${d.id}')">Reject</button>`}
     </div>`;
-    r.approved?approvedReviews.innerHTML+=html:pendingReviews.innerHTML+=html;
+    r.approved?approved.innerHTML+=box:pending.innerHTML+=box;
   });
 }
-window.approve=async id=>{
+window.approve=async(id)=>{
   await updateDoc(doc(db,"reviews",id),{approved:true});
-  popup("Review approved");
-  loadReviews();
+  popup("Approved"); loadReviews();
 };
 
-/* COMMON */
+/* EDIT */
+window.edit=async(col,id,n,d)=>{
+  const name=prompt("Edit name",n);
+  const desc=prompt("Edit description",d);
+  if(!name||!desc) return;
+  await updateDoc(doc(db,col,id),{name,desc});
+  popup("Updated");
+  loadServices(); loadProducts();
+};
+
+/* DELETE */
 window.del=async(col,id)=>{
   await deleteDoc(doc(db,col,id));
   popup("Deleted");
-  loadAll();
+  loadServices(); loadProducts(); loadReviews();
 };
-async function loadAll(){
-  await loadSettings();
-  await loadServices();
-  await loadProducts();
-  await loadReviews();
-}
-window.logout=async()=>{
-  await signOut(auth);
-  location.href="adminlog.html";
-};
+
+/* INIT */
+loadSettings(); loadServices(); loadProducts(); loadReviews();
 </script>
 
 </body>
