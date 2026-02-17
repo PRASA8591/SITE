@@ -12,310 +12,285 @@
   --main:#0a3d62;
   --accent:#25D366;
   --light:#f5f7fa;
+  --dark:#333;
+  --skeleton: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
 }
-*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins', sans-serif}
 html{scroll-behavior:smooth}
-body{background:var(--light);color:#333}
+body{background:var(--light);color:var(--dark);overflow-x:hidden}
 
-/* HEADER */
+/* --- ANIMATIONS --- */
+@keyframes shine { to { background-position-x: -200%; } }
+
+/* --- SKELETON LOADERS --- */
+.skeleton {
+  background: var(--skeleton);
+  background-size: 200% 100%;
+  animation: 1.5s shine linear infinite;
+  border-radius: 16px;
+  height: 180px;
+  width: 100%;
+}
+
+/* HEADER & NAV */
 header{
   background:var(--main);
   color:#fff;
-  padding:12px 8%;
+  padding:15px 8%;
   display:flex;
   align-items:center;
   justify-content:space-between;
   position:sticky;
   top:0;
-  z-index:10;
+  z-index:100;
+  box-shadow:0 4px 12px rgba(0,0,0,0.1);
 }
-.logo{display:flex;align-items:center;gap:10px}
-.logo img{height:40px}
-nav a{
-  color:#fff;margin:0 12px;
-  text-decoration:none;font-weight:500;
-}
-nav a:hover{opacity:.85}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;font-size:1.2rem;}
+.logo img{height:35px}
 
-/* LANG */
-.langBtn{
-  background:#fff;color:#333;
-  border:none;padding:6px 14px;
-  border-radius:20px;
-  cursor:pointer;font-weight:600;
-}
+nav{display:flex;align-items:center;gap:20px}
+nav a{color:#fff;text-decoration:none;font-weight:500;transition:0.3s;font-size:0.95rem;}
+nav a:hover{color:var(--accent)}
+
+.mobile-toggle{display:none;background:none;border:none;color:#fff;font-size:26px;cursor:pointer;}
 
 /* HERO */
 .hero{
-  background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
-  url("https://images.unsplash.com/photo-1581090700227-1e37b190418e") center/cover;
+  background:linear-gradient(rgba(10,61,98,0.85),rgba(10,61,98,0.7)),
+  url("https://images.unsplash.com/photo-1581090700227-1e37b190418e?auto=format&fit=crop&w=1920") center/cover;
   color:#fff;text-align:center;
-  padding:90px 10%;
+  padding:120px 10%;
 }
-.hero h2{font-size:42px}
-.hero p{margin-top:10px;font-size:18px}
+.hero h2{font-size:clamp(32px, 5vw, 48px); margin-bottom:15px;line-height:1.2}
 
-/* SECTION */
-section{padding:70px 8%}
-section h2{text-align:center;color:var(--main);margin-bottom:40px}
-
-/* GRID */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:25px;
-}
+/* CARDS & GRID */
+section{padding:80px 8%}
+section h2{text-align:center;color:var(--main);margin-bottom:50px;font-size:2rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:30px;}
 .card{
-  background:#fff;padding:25px;
-  border-radius:16px;
-  box-shadow:0 12px 30px rgba(0,0,0,.08);
-  transition:.35s;
+  background:#fff;padding:30px;border-radius:16px;
+  box-shadow:0 10px 25px rgba(0,0,0,.05);
+  transition:0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border:1px solid rgba(0,0,0,0.03);
 }
-.card:hover{
-  transform:translateY(-8px);
-  box-shadow:0 22px 45px rgba(0,0,0,.15);
-}
+.card:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(0,0,0,.1);}
 
-/* CONTACT */
+/* CONTACT & WHATSAPP */
 .contactWrap{
-  background:linear-gradient(135deg,#0a3d62,#1e6fa6);
-  border-radius:22px;
-  padding:50px;
-  color:#fff;
-  box-shadow:0 25px 50px rgba(0,0,0,.25);
+  background:linear-gradient(135deg,#0a3d62,#155e91);
+  border-radius:24px;padding:50px;color:#fff;
 }
-.contactGrid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:25px;
+.whatsapp-fab {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  background: var(--accent);
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 10px 25px rgba(37,211,102,0.4);
+  z-index: 999;
+  cursor: pointer;
+  transition: 0.3s;
 }
-.contactCard{
-  background:rgba(255,255,255,.12);
-  padding:30px;
-  border-radius:18px;
-  text-align:center;
-  backdrop-filter:blur(6px);
-  animation:pulse 2.5s infinite;
-  transition:.4s;
-}
-.contactCard:hover{
-  transform:translateY(-10px) scale(1.03);
-  background:rgba(255,255,255,.2);
-}
-
-/* MAP */
-.mapBox{
-  margin-top:40px;
-  border-radius:20px;
-  overflow:hidden;
-  box-shadow:0 25px 50px rgba(0,0,0,.25);
-  transform:scale(.95);
-  opacity:0;
-  animation:mapIn 1.2s ease forwards;
-}
-.mapBox iframe{
-  width:100%;
-  height:380px;
-  border:0;
-}
+.whatsapp-fab:hover { transform: scale(1.1); }
 
 /* FORM */
-input,textarea{
-  width:100%;
-  padding:10px;
-  margin:6px 0;
-  border-radius:8px;
-  border:1px solid #ccc;
+.review-form { max-width: 600px; margin: 0 auto; }
+input, textarea {
+  width: 100%; padding: 14px; margin: 8px 0;
+  border-radius: 8px; border: 1px solid #ddd;
 }
-button.main{
-  background:var(--accent);
-  border:none;
-  padding:12px 30px;
-  color:#fff;
-  border-radius:30px;
-  cursor:pointer;
+button.main {
+  background: var(--accent); border: none; padding: 14px 40px;
+  color: #fff; border-radius: 50px; cursor: pointer;
+  font-weight: 600; width: 100%; transition: 0.3s;
 }
+button.wa-btn { background: #128C7E; margin-top: 10px; }
 
-/* FOOTER */
-footer{
-  background:var(--main);
-  color:#fff;
-  text-align:center;
-  padding:22px;
-  font-size:14px;
-}
+/* MAP */
+.mapBox { width: 100%; height: 350px; border-radius: 16px; overflow: hidden; margin-top: 30px; }
 
-/* POPUP */
-#popup{
-  position:fixed;
-  bottom:20px;right:20px;
-  background:#333;color:#fff;
-  padding:14px 20px;
-  border-radius:12px;
-  display:none;
+/* FOOTER & POPUP */
+footer { background: var(--main); color: rgba(255,255,255,0.7); text-align: center; padding: 30px; }
+#popup {
+  position: fixed; bottom: 30px; right: 30px; background: #333; color: #fff;
+  padding: 15px 25px; border-radius: 8px; opacity: 0; pointer-events: none; transition: 0.4s;
 }
+#popup.show { opacity: 1; transform: translateY(-10px); }
 
-/* ANIMATIONS */
-@keyframes pulse{
-  0%{box-shadow:0 0 0 0 rgba(255,255,255,.4)}
-  70%{box-shadow:0 0 0 18px rgba(255,255,255,0)}
-  100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}
-}
-@keyframes mapIn{
-  to{opacity:1;transform:scale(1)}
-}
-
-/* MOBILE */
 @media(max-width:768px){
-  nav{display:none}
-  .hero h2{font-size:32px}
+  .mobile-toggle{display:block}
+  nav{
+    position:absolute; top:100%; left:0; right:0; background:var(--main);
+    flex-direction:column; padding:20px; clip-path:circle(0% at 100% 0); transition:0.4s;
+  }
+  nav.active{clip-path:circle(150% at 100% 0)}
 }
 </style>
 </head>
-
 <body>
 
 <header>
-  <div class="logo">
-    <img src="logo.png">
-    <strong>PrasaTek</strong>
-  </div>
-
-  <nav>
-    <a href="#services">Services</a>
-    <a href="#products">Products</a>
-    <a href="#reviews">Reviews</a>
-    <a href="#contact">Contact</a>
+  <a href="#" class="logo"><strong>PrasaTek</strong></a>
+  <button class="mobile-toggle" onclick="toggleMenu()">☰</button>
+  <nav id="navMenu">
+    <a href="#services" onclick="toggleMenu()">Services</a>
+    <a href="#products" onclick="toggleMenu()">Products</a>
+    <a href="#reviews" onclick="toggleMenu()">Reviews</a>
+    <a href="#contact" onclick="toggleMenu()">Contact</a>
+    <button class="langBtn" onclick="toggleLang()" id="langBtn">සිං</button>
   </nav>
-
-  <button class="langBtn" onclick="toggleLang()" id="langBtn">සිං</button>
 </header>
 
 <div class="hero">
   <h2 id="heroTitle">Your Trusted Technology Partner</h2>
-  <p id="heroDesc">Sales • Repairs • Custom Builds</p>
+  <p id="heroDesc">Professional Repairs & Custom PC Solutions</p>
 </div>
 
 <section id="services">
-<h2 id="srvTitle">Our Services</h2>
-<div id="servicesList" class="grid"></div>
+  <h2 id="srvTitle">Our Services</h2>
+  <div id="servicesList" class="grid">
+    <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+  </div>
 </section>
 
 <section id="products">
-<h2 id="prdTitle">Products</h2>
-<div id="productsList" class="grid"></div>
-</section>
-
-<section id="reviews">
-<h2 id="revTitle">Customer Reviews</h2>
-<div id="reviewsList" class="grid"></div>
+  <h2 id="prdTitle">Featured Products</h2>
+  <div id="productsList" class="grid">
+    <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+  </div>
 </section>
 
 <section id="contact">
-<h2>Contact Us</h2>
-
-<div class="contactWrap">
-  <div class="contactGrid">
-    <div class="contactCard"><h3>📞 Phone</h3><p id="cPhone">Loading...</p></div>
-    <div class="contactCard"><h3>📧 Email</h3><p id="cEmail">Loading...</p></div>
-    <div class="contactCard"><h3>📍 Address</h3><p id="cAddress">Loading...</p></div>
+  <h2 id="contactTitle">Get in Touch</h2>
+  <div class="contactWrap">
+    <div class="grid">
+      <div>
+        <h3 id="cPhone">Loading...</h3>
+        <p id="cEmail">Loading...</p>
+        <p id="cAddress">Loading...</p>
+        
+        <div class="mapBox">
+          <iframe src="https://www.google.com/maps/embed?pb=PLACEHOLDER" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+      </div>
+      
+      <div class="card" style="color:#333">
+        <h3>Quick Inquiry</h3>
+        <input id="qName" placeholder="Your Name">
+        <textarea id="qMsg" placeholder="How can we help you?"></textarea>
+        <button class="main wa-btn" onclick="sendWhatsApp()">Chat on WhatsApp</button>
+      </div>
+    </div>
   </div>
-
-  <!-- GOOGLE MAP -->
-  <div class="mapBox">
-    <iframe 
-      src="https://www.google.com/maps?q=Sri%20Lanka&output=embed"
-      loading="lazy"
-      referrerpolicy="no-referrer-when-downgrade">
-    </iframe>
-  </div>
-</div>
-
-<br><br>
-
-<h2 id="addRev">Add Your Review</h2>
-<input id="rName" placeholder="Name">
-<input id="rEmail" placeholder="Email">
-<textarea id="rMsg" placeholder="Your review"></textarea>
-<button class="main" onclick="submitReview()">Submit</button>
-
 </section>
 
-<footer>
-  © 2026 <strong>PrasaTek System Solutions</strong>. All Rights Reserved.
-</footer>
+<section id="reviews">
+  <h2 id="revTitle">What Clients Say</h2>
+  <div id="reviewsList" class="grid"></div>
+  <br><br>
+  <div class="review-form">
+    <h3 id="addRev" style="text-align:center; margin-bottom:20px">Write a Review</h3>
+    <input id="rName" placeholder="Name">
+    <textarea id="rMsg" placeholder="Your experience..."></textarea>
+    <button class="main" onclick="submitReview()">Submit for Approval</button>
+  </div>
+</section>
 
-<div id="popup"></div>
+<a class="whatsapp-fab" onclick="sendWhatsApp()">
+  <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" width="35" style="filter:invert(1)">
+</a>
+
+<footer>© 2026 <strong>PrasaTek System Solutions</strong>.</footer>
+<div id="popup">Notification</div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc, query, where } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, getDocs, addDoc, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-const firebaseConfig={
-  apiKey:"AIzaSyDijkYp6_KD3B3UXfNs59LgTUeaKOFDZ7s",
-  authDomain:"prasatek-8a823.firebaseapp.com",
-  projectId:"prasatek-8a823"
-};
+  const firebaseConfig = {
+    apiKey: "AIzaSy...", 
+    authDomain: "prasatek-8a823.firebaseapp.com",
+    projectId: "prasatek-8a823"
+  };
 
-const app=initializeApp(firebaseConfig);
-const db=getFirestore(app);
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-const popupBox=document.getElementById("popup");
-function popup(msg){
-  popupBox.innerText=msg;
-  popupBox.style.display="block";
-  setTimeout(()=>popupBox.style.display="none",2500);
-}
+  let lang = "en";
+  let shopPhone = "94700000000"; // Default
 
-loadServices();loadProducts();loadReviews();loadSettings();
+  const showPopup = (m) => {
+    const p = document.getElementById("popup");
+    p.innerText = m; p.classList.add("show");
+    setTimeout(() => p.classList.remove("show"), 3000);
+  };
 
-async function loadServices(){
-  const s=await getDocs(collection(db,"services"));
-  servicesList.innerHTML="";
-  s.forEach(d=>servicesList.innerHTML+=`<div class="card"><h3>${d.data().name}</h3><p>${d.data().desc}</p></div>`);
-}
-async function loadProducts(){
-  const s=await getDocs(collection(db,"products"));
-  productsList.innerHTML="";
-  s.forEach(d=>productsList.innerHTML+=`<div class="card"><h3>${d.data().name}</h3><p>${d.data().desc}</p></div>`);
-}
-async function loadReviews(){
-  const q=query(collection(db,"reviews"),where("approved","==",true));
-  const s=await getDocs(q);
-  reviewsList.innerHTML="";
-  s.forEach(d=>reviewsList.innerHTML+=`<div class="card"><p>${d.data().message}</p><small>— ${d.data().name}</small></div>`);
-}
-async function loadSettings(){
-  const s=await getDocs(collection(db,"settings"));
-  s.forEach(d=>{
-    cPhone.innerText=d.data().phone;
-    cEmail.innerText=d.data().email;
-    cAddress.innerText=d.data().address;
-  });
-}
+  window.toggleMenu = () => document.getElementById("navMenu").classList.toggle("active");
 
-window.submitReview=async()=>{
-  if(!rName.value||!rEmail.value||!rMsg.value) return popup("Fill all fields");
-  await addDoc(collection(db,"reviews"),{name:rName.value,email:rEmail.value,message:rMsg.value,approved:false});
-  rName.value=rEmail.value=rMsg.value="";
-  popup("Review submitted for approval");
-};
+  // --- WHATSAPP LOGIC ---
+  window.sendWhatsApp = () => {
+    const name = document.getElementById("qName").value || "Customer";
+    const msg = document.getElementById("qMsg").value || "I'm interested in your services.";
+    const text = `Hi PrasaTek, I'm ${name}. ${msg}`;
+    window.open(`https://wa.me/${shopPhone}?text=${encodeURIComponent(text)}`, '_blank');
+  };
 
-let lang="en";
-const si={
-  heroTitle:"ඔබගේ විශ්වාසදායක තාක්ෂණික හවුල්කරු",
-  heroDesc:"විකුණුම් • අලුත්වැඩියා • Custom PC",
-  srvTitle:"අපගේ සේවාවන්",
-  prdTitle:"නිෂ්පාදන",
-  revTitle:"පාරිභෝගික අදහස්",
-  addRev:"ඔබගේ අදහස එක් කරන්න"
-};
-window.toggleLang=()=>{
-  lang=lang==="en"?"si":"en";
-  langBtn.innerText=lang==="en"?"සිං":"EN";
-  if(lang==="si"){Object.keys(si).forEach(id=>document.getElementById(id).innerText=si[id]);}
-  else location.reload();
-};
+  // --- DATA LOADING ---
+  async function loadContent() {
+    // Services
+    const sSnap = await getDocs(collection(db, "services"));
+    let sHtml = "";
+    sSnap.forEach(doc => {
+      const d = doc.data();
+      sHtml += `<div class="card"><h3>${lang==='si' && d.name_si ? d.name_si : d.name}</h3><p>${lang==='si' && d.desc_si ? d.desc_si : d.desc}</p></div>`;
+    });
+    document.getElementById("servicesList").innerHTML = sHtml || "<p>Coming soon...</p>";
+
+    // Products
+    const pSnap = await getDocs(collection(db, "products"));
+    let pHtml = "";
+    pSnap.forEach(doc => {
+      const d = doc.data();
+      pHtml += `<div class="card"><h3>${d.name}</h3><p>${d.price ? 'Rs. ' + d.price : d.desc}</p></div>`;
+    });
+    document.getElementById("productsList").innerHTML = pHtml || "<p>New stock arriving!</p>";
+  }
+
+  async function loadSettings() {
+    const snap = await getDocs(collection(db, "settings"));
+    snap.forEach(doc => {
+      const d = doc.data();
+      document.getElementById("cPhone").innerText = "📞 " + d.phone;
+      document.getElementById("cEmail").innerText = "📧 " + d.email;
+      document.getElementById("cAddress").innerText = "📍 " + d.address;
+      shopPhone = d.phone.replace(/[^0-9]/g, ''); // Format for WhatsApp
+    });
+  }
+
+  window.submitReview = async () => {
+    const name = document.getElementById("rName").value;
+    const msg = document.getElementById("rMsg").value;
+    if(!name || !msg) return showPopup("Fill all fields");
+    
+    await addDoc(collection(db, "reviews"), { name, message: msg, approved: false });
+    showPopup("Review sent! We will publish it soon.");
+    document.getElementById("rName").value = ""; document.getElementById("rMsg").value = "";
+  };
+
+  // Initialize
+  loadContent();
+  loadSettings();
+
+  // Handle Translation
+  window.toggleLang = () => {
+    lang = lang === "en" ? "si" : "en";
+    document.getElementById("langBtn").innerText = lang === "en" ? "සිං" : "EN";
+    // For a real app, you'd map translations here or reload
+    loadContent(); 
+    showPopup(lang === "si" ? "භාෂාව වෙනස් කරන ලදි" : "Language Switched");
+  };
 </script>
 
 </body>
